@@ -1,4 +1,4 @@
-package org.kholkins.englishinterlocutorbackend.framework
+package org.kholkins.englishinterlocutorbackend
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
