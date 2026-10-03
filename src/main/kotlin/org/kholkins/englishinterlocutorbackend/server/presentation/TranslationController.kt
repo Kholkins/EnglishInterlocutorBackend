@@ -1,6 +1,6 @@
 package org.kholkins.englishinterlocutorbackend.server.presentation
 
-import org.kholkins.englishinterlocutorbackend.server.application.TranslateUseCase
+import org.kholkins.englishinterlocutorbackend.server.application.usecases.TranslateUseCase
 import org.kholkins.englishinterlocutorbackend.server.domain.model.TranslateRequest
 import org.kholkins.englishinterlocutorbackend.server.domain.model.TranslateResponse
 import org.springframework.web.bind.annotation.*
