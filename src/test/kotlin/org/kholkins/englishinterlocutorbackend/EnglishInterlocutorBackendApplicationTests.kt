@@ -1,32 +1,35 @@
 package org.kholkins.englishinterlocutorbackend
 
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.mockito.kotlin.any
+import org.mockito.kotlin.whenever
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.context.ActiveProfiles
+import org.springframework.test.context.bean.override.mockito.MockitoBean
 import org.kholkins.englishinterlocutorbackend.server.application.TranslateClient
 import org.kholkins.englishinterlocutorbackend.server.application.TranslateResult
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
+import org.springframework.test.context.TestPropertySource
 
-@SpringBootTest(properties = ["spring.profiles.active=test"])
+@SpringBootTest
+@ActiveProfiles("test")
+@TestPropertySource(properties = [
+    "YANDEX_API_KEY=test-key",
+    "YANDEX_FOLDER_ID=test-folder"
+])
 class EnglishInterlocutorBackendApplicationTests {
 
-    @Test
-    fun contextLoads() {
-        // Пустой тест: если контекст поднялся без ошибок — тест пройден
-    }
+    @MockitoBean
+    private lateinit var translateClient: TranslateClient
 
-    // Эта конфигурация работает ТОЛЬКО в тестах и заменяет реальный YandexTranslateClient на мок
-    @Configuration
-    class TestConfig {
-        @Bean
-        fun mockTranslateClient(): TranslateClient = object : TranslateClient {
-            override fun translate(text: String, targetLang: String): TranslateResult {
-                // Возвращаем предсказуемый результат для тестов
-                return TranslateResult(
-                    translatedText = "mocked: $text",
-                    detectedLanguage = "en"
-                )
-            }
-        }
+    @Test
+    fun `context loads with mocked translate client`() {
+        whenever(translateClient.translate(any(), any()))
+            .thenReturn(TranslateResult("mocked", "en"))
+
+        val result = translateClient.translate("Hello", "ru")
+
+        assertThat(result.translatedText).isEqualTo("mocked")
+        assertThat(result.detectedLanguage).isEqualTo("en")
     }
 }
