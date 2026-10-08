@@ -1,5 +1,6 @@
 package org.kholkins.englishinterlocutorbackend.server.infrastructure
 
+import org.kholkins.englishinterlocutorbackend.server.application.GptClient
 import org.kholkins.englishinterlocutorbackend.server.infrastructure.dto.GptRequest
 import org.kholkins.englishinterlocutorbackend.server.infrastructure.dto.GptResponse
 import tools.jackson.databind.ObjectMapper
@@ -9,14 +10,14 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 
 @Service
-class GptClient(
+class YandexGptClient(
     @Value("\${YANDEX_API_KEY}") private val apiKey: String,
     @Value("\${yandex.gpt.url}") private val url: String,
     private val objectMapper: ObjectMapper
-) {
+) : GptClient {
     private val client = HttpClient.newHttpClient()
 
-    fun call(request: GptRequest): GptResponse {
+    override fun call(request: GptRequest): GptResponse {
         val body = objectMapper.writeValueAsString(request)
         val httpRequest = HttpRequest.newBuilder()
             .uri(URI.create(url))
