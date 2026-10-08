@@ -16,7 +16,6 @@ class GptController(
 ) {
     @PostMapping("/chat")
     fun chat(@RequestBody req: ChatRequest): ChatResponse {
-        // Вариант с костылём: берём текст первого сообщения для старого useCase
         val gptMessages = req.messages.map { msg ->
             GptMessage(role = msg.role, text = msg.text)
         }
